@@ -10,6 +10,7 @@ import SwiftUI
 
 
 struct CalendarMonthView: View {
+    @Environment(EventStore.self) private var eventStore
     let calendarMonth: CalendarMonth
     let columns = Array(repeating: GridItem(.flexible()), count: Calendar.current.shortStandaloneWeekdaySymbols.count)
     let weekdaySymbols = Calendar.current.shortStandaloneWeekdaySymbolsLocalized
@@ -26,24 +27,28 @@ struct CalendarMonthView: View {
             }
             .fontWeight(.semibold)
             
-            Section("Friday, 20th") {
-                Text("1")
-                Text("2")
-                Text("3")
+            ForEach(eventStore.events(for: calendarMonth)) { event in
+                HStack {
+                    RoundedRectangle(cornerRadius: 3)
+                        .frame(width: 6)
+                        .foregroundStyle(Color.cyan)
+                    VStack(alignment: .leading) {
+                        Text(event.title)
+                            .font(.headline)
+                            .foregroundStyle(.primary)
+                        Text("⚐ \(event.location)")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    VStack(alignment: .trailing) {
+                        Text(event.startDate, format: .dateTime.hour().minute())
+                            .foregroundStyle(.primary)
+                        Text(event.endDate, format: .dateTime.hour().minute())
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
-            
-            Section("Saturday, 21th") {
-                Text("1")
-                Text("2")
-                Text("3")
-            }
-            
-            Section("Sunday, 22th") {
-                Text("1")
-                Text("2")
-                Text("3")
-            }
-            Text("bbb")
         }
         .listStyle(.plain)
     }
@@ -84,12 +89,14 @@ struct CalendarMonthView: View {
 }
 
 #Preview("This Month") {
-    CalendarMonthView(calendarMonth: CalendarMonth(date: .now, highlightedDates: CalendarMonth.sampleDates)) {
+    let eventStore = EventStore()
+    CalendarMonthView(calendarMonth: eventStore.months.last!) {
         print("Tapped Previous Month")
     } onTapNextMonth: {
         print("Tapped Next Month")
     } onTapDay: { date in
         print("Tapped on day: \(date.description(with: .current))")
     }
+    .environment(eventStore)
 }
 

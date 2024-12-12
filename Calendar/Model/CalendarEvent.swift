@@ -16,7 +16,7 @@ struct CalendarEvent: Identifiable, Hashable {
     
     static func sampleDaysAgo(count: Int) -> [Int] {
         return (0..<count)
-            .map { _ in Int.random(in: -90..<0) }
+            .map { _ in Int.random(in: -30..<0) }
     }
     
     static var sampleLocations: [String] {
