@@ -9,51 +9,20 @@ import SwiftUI
 import Algorithms
 
 struct CalendarCarouselView: View {
-    @State private var selection: CalendarMonth
+    @Environment(EventStore.self) private var eventStore
     @State private var navigationPath = NavigationPath()
-    
-    let months: [CalendarMonth]
-    let events: [CalendarEvent]
-    
-    init(events: [CalendarEvent]) {
-        let a = events.map(\.startDate)
-        let x = a.chunked { $0.startOfMonth }
-        var localMonths: [CalendarMonth] = []
-        for (date, events) in x {
-            localMonths.append(CalendarMonth(date: date, highlightedDates: Set(events.map { Calendar.current.startOfDay(for: $0) })))
-        }
-        let today = Date.now
-        let currentMonthStartDate = Calendar.current.startOfDay(for: today.startOfMonth)
-        if let currentMonth = localMonths.first(where: { $0.startDate == currentMonthStartDate }) {
-            print("found")
-            self.selection = currentMonth
-        } else {
-            print("not found")
-            let currentMonth = CalendarMonth(date: today)
-            localMonths.append(currentMonth)
-            self.selection = currentMonth
-        }
-        self.months = localMonths.sorted(by: \.startDate)
-        self.events = events
-    }
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            TabView(selection: $selection) {
-                ForEach(months, id: \.self) { month in
-                    CalendarMonthView(calendarMonth: month) {
-                        selection = months.previous(of: month)!
-                    } onTapNextMonth: {
-                        selection = months.next(of: month)!
-                    } onTapDay: { date in
-                        if let calendarEvent = events.first(where: { Calendar.current.startOfDay(for: $0.startDate) == date }) {
-                            navigationPath.append(calendarEvent)
-                        }
+            TabView(selection: Bindable(eventStore).selection) {
+                ForEach(eventStore.months.indices, id: \.self) { index in
+                    CalendarMonthView(calendarMonth: eventStore.months[index], onTapPreviousMonth: eventStore.previousMonth, onTapNextMonth: eventStore.nextMonth) { date in
+                        print("Date: \(date)")
                     }
-                    .tag(month)
+                    .tag(index)
                 }
             }
-            .animation(.default, value: selection)
+            .animation(.default, value: eventStore.selection)
             .tabViewStyle(.page)
             .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(for: CalendarEvent.self) { event in
@@ -64,5 +33,6 @@ struct CalendarCarouselView: View {
 }
 
 #Preview {
-    CalendarCarouselView(events: CalendarEvent.sampleEvents)
+    CalendarCarouselView()
+        .environment(EventStore())
 }

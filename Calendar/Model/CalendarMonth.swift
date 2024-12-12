@@ -11,7 +11,7 @@ struct CalendarMonth: Identifiable, Hashable {
     let startDate: Date
     let hightlightedDates: Set<Date>
     
-    init(date: Date, highlightedDates: Set<Date> = []) {
+    init(date: Date = .now, highlightedDates: Set<Date> = []) {
         self.startDate = date.startOfMonth
         self.hightlightedDates = highlightedDates
     }

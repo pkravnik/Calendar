@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct CalendarApp: App {
+    @State private var eventStore = EventStore()
     var body: some Scene {
         WindowGroup {
-            CalendarCarouselView(events: [])
+            CalendarCarouselView()
+                .environment(eventStore)
         }
     }
 }

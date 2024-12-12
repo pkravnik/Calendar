@@ -18,39 +18,68 @@ struct CalendarMonthView: View {
     let onTapDay: (Date) -> Void
     
     var body: some View {
-        VStack {
-            Grid {
-                GridRow {
-                    Button(action: onTapPreviousMonth) {
-                        Image(systemName: "chevron.left")
-                    }
-                    Text(calendarMonth.startDate, format: .dateTime.month(.wide).year())
-                        .font(.title)
-                        .frame(maxWidth: .infinity)
-                        .gridCellColumns(5)
-                    
-                    Button(action: onTapNextMonth) {
-                        Image(systemName: "chevron.right")
-                    }
-                }
-            }
-            CalendarLayout(daysInWeek: 7, spacing: 4)/*LazyVGrid(columns: columns)*/ {
-                ForEach(weekdaySymbols.indices, id: \.self) { index in
-                    Text(weekdaySymbols[index])
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .fontWeight(.heavy)
-                        .font(.title3)
-                        .foregroundStyle(.primary.opacity(0.7))
-                }
+        List {
+            VStack {
+                header
+                calendar
                 
-                ForEach(calendarMonth.calendayDays) { calendarDay in
-                    CalendarDayView(calendarDay: calendarDay, onTapCalendarDay: onTapDay)
+            }
+            .fontWeight(.semibold)
+            
+            Section("Friday, 20th") {
+                Text("1")
+                Text("2")
+                Text("3")
+            }
+            
+            Section("Saturday, 21th") {
+                Text("1")
+                Text("2")
+                Text("3")
+            }
+            
+            Section("Sunday, 22th") {
+                Text("1")
+                Text("2")
+                Text("3")
+            }
+            Text("bbb")
+        }
+        .listStyle(.plain)
+    }
+    
+    var header: some View {
+        Grid {
+            GridRow {
+                Button(action: onTapPreviousMonth) {
+                    Image(systemName: "chevron.left")
+                }
+                Text(calendarMonth.startDate, format: .dateTime.month(.wide).year())
+                    .font(.title)
+                    .frame(maxWidth: .infinity)
+                    .gridCellColumns(5)
+                
+                Button(action: onTapNextMonth) {
+                    Image(systemName: "chevron.right")
                 }
             }
-            Spacer()
         }
-        .fontWeight(.semibold)
-        .padding()
+    }
+    
+    var calendar: some View {
+        CalendarLayout(daysInWeek: 7, spacing: 4)/*LazyVGrid(columns: columns)*/ {
+            ForEach(weekdaySymbols.indices, id: \.self) { index in
+                Text(weekdaySymbols[index])
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .fontWeight(.heavy)
+                    .font(.title3)
+                    .foregroundStyle(.primary.opacity(0.7))
+            }
+            
+            ForEach(calendarMonth.calendayDays) { calendarDay in
+                CalendarDayView(calendarDay: calendarDay, onTapCalendarDay: onTapDay)
+            }
+        }
     }
 }
 
