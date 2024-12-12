@@ -18,6 +18,10 @@ final class EventStore {
         events.filter { Calendar.current.startOfDay(for: $0.startDate.startOfMonth) == month.startDate }
     }
     
+    func eventsGroupedByDate(for month: CalendarMonth) -> [(Date, Array<CalendarEvent>.SubSequence)] {
+        events(for: month).chunked { $0.startDate }
+    }
+    
     func previousMonth() {
         selection = max(selection - 1, 0)
     }

@@ -27,26 +27,41 @@ struct CalendarMonthView: View {
             }
             .fontWeight(.semibold)
             
-            ForEach(eventStore.events(for: calendarMonth)) { event in
-                HStack {
-                    RoundedRectangle(cornerRadius: 3)
-                        .frame(width: 6)
-                        .foregroundStyle(Color.cyan)
-                    VStack(alignment: .leading) {
-                        Text(event.title)
-                            .font(.headline)
-                            .foregroundStyle(.primary)
-                        Text("⚐ \(event.location)")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+            let eventsByDate = eventStore.eventsGroupedByDate(for: calendarMonth)
+            ForEach(eventsByDate.indices, id: \.self) { index in
+                let eventByDate = eventsByDate[index]
+                let eventDate = eventByDate.0
+                let sectionTitle1 = eventDate.formatted(.dateTime.weekday(.wide))
+                let sectionTitle2 = eventDate.formatted(.dateTime.day().month(.abbreviated))
+                let sectionTitle = "\(sectionTitle1) - \(sectionTitle2)"
+                Section {
+                    ForEach(eventByDate.1) { event in
+                        HStack {
+                            RoundedRectangle(cornerRadius: 3)
+                                .frame(width: 6)
+                                .foregroundStyle(Color.cyan)
+                            VStack(alignment: .leading) {
+                                Text(event.title)
+                                    .fontWeight(.bold)
+//                                    .font(.headline)
+                                    .foregroundStyle(.primary)
+                                Text("⚐ \(event.location)")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer()
+                            VStack(alignment: .trailing) {
+                                Text(event.startDate, format: .dateTime.hour().minute())
+                                    .foregroundStyle(.primary)
+                                Text(event.endDate, format: .dateTime.hour().minute())
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
                     }
-                    Spacer()
-                    VStack(alignment: .trailing) {
-                        Text(event.startDate, format: .dateTime.hour().minute())
-                            .foregroundStyle(.primary)
-                        Text(event.endDate, format: .dateTime.hour().minute())
-                            .foregroundStyle(.secondary)
-                    }
+                } header: {
+                    Text(sectionTitle.uppercased())
+                        .font(.headline)
+                        .fontWeight(.bold)
                 }
             }
         }
