@@ -41,7 +41,7 @@ struct CalendarCarouselView: View {
         NavigationStack(path: $navigationPath) {
             TabView(selection: $selection) {
                 ForEach(months, id: \.self) { month in
-                    CalendarView(calendarMonth: month) {
+                    CalendarMonthView(calendarMonth: month) {
                         selection = months.previous(of: month)!
                     } onTapNextMonth: {
                         selection = months.next(of: month)!

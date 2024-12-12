@@ -1,5 +1,5 @@
 //
-//  CalendarView.swift
+//  CalendarMonthView.swift
 //  Calendar
 //
 //  Created by Petr Kravnik on 06.12.2024.
@@ -9,7 +9,7 @@ import SwiftUI
 
 
 
-struct CalendarView: View {
+struct CalendarMonthView: View {
     let calendarMonth: CalendarMonth
     let columns = Array(repeating: GridItem(.flexible()), count: Calendar.current.shortStandaloneWeekdaySymbols.count)
     let weekdaySymbols = Calendar.current.shortStandaloneWeekdaySymbolsLocalized
@@ -55,7 +55,7 @@ struct CalendarView: View {
 }
 
 #Preview("This Month") {
-    CalendarView(calendarMonth: CalendarMonth(date: .now, highlightedDates: CalendarMonth.sampleDates)) {
+    CalendarMonthView(calendarMonth: CalendarMonth(date: .now, highlightedDates: CalendarMonth.sampleDates)) {
         print("Tapped Previous Month")
     } onTapNextMonth: {
         print("Tapped Next Month")
