@@ -38,7 +38,7 @@ struct CalendarCarouselView: View {
     }
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             TabView(selection: $selection) {
                 ForEach(months, id: \.self) { month in
                     CalendarView(calendarMonth: month) {
@@ -46,7 +46,6 @@ struct CalendarCarouselView: View {
                     } onTapNextMonth: {
                         selection = months.next(of: month)!
                     } onTapDay: { date in
-                        print("selected date: \(date.description(with: .current))")
                         if let calendarEvent = events.first(where: { Calendar.current.startOfDay(for: $0.startDate) == date }) {
                             navigationPath.append(calendarEvent)
                         }
