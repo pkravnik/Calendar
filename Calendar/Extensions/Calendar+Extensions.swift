@@ -44,26 +44,4 @@ extension Calendar {
         
         return result.dropLast()
     }
-    
-    func daysTwoMonthAround(from effectiveDate: Date, count: Int) -> [Date] {
-        var result: [Date] = []
-        var countFound = 0
-        let matchingComponents = DateComponents(day: 1, hour: 13, minute: 0, second: 0)
-        self.enumerateDates(startingAfter: effectiveDate, matching: matchingComponents, matchingPolicy: .nextTime, direction: .backward) { date, exactMatch, stop in
-            guard let date else { stop = true; return }
-            result.append(date)
-            countFound += 1
-            if countFound == count { stop = true }
-        }
-        result.reverse()
-        countFound = 0
-        self.enumerateDates(startingAfter: effectiveDate, matching: matchingComponents, matchingPolicy: .nextTime, direction: .forward) { date, exactMatch, stop in
-            guard let date else { stop = true; return }
-            result.append(date)
-            countFound += 1
-            if countFound == count { stop = true }
-        }
-        
-        return result
-    }
 }
