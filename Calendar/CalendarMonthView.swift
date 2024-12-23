@@ -43,7 +43,6 @@ struct CalendarMonthView: View {
                             VStack(alignment: .leading) {
                                 Text(event.title)
                                     .fontWeight(.bold)
-//                                    .font(.headline)
                                     .foregroundStyle(.primary)
                                 Text("⚐ \(event.location)")
                                     .font(.subheadline)
@@ -87,7 +86,7 @@ struct CalendarMonthView: View {
     }
     
     var calendar: some View {
-        CalendarLayout(daysInWeek: 7, spacing: 4)/*LazyVGrid(columns: columns)*/ {
+        CalendarLayout(daysInWeek: 7, spacing: 4) {
             ForEach(weekdaySymbols.indices, id: \.self) { index in
                 Text(weekdaySymbols[index])
                     .frame(maxWidth: .infinity, maxHeight: .infinity)

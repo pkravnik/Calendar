@@ -9,7 +9,7 @@ import SwiftUI
 
 @Observable
 final class EventStore {
-    private var events: [CalendarEvent]
+    private(set) var events: [CalendarEvent]
     private(set) var months: [CalendarMonth]
     
     var selection: Int
